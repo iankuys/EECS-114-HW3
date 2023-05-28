@@ -1,17 +1,30 @@
 #include "HashTable.h"
 #include <iostream>
 #include <random>
+#include <cstdlib>
+#include <cassert>
 
 using namespace std;
 
 int main(int argc, char* argv[]){
     
-    int* nProbe;
-    int average;
+    int N = -1;
+
+    if (argc == 2) {
+        N = atoi (argv[1]);
+        assert(N > 0);
+    } else {
+        fprintf (stderr, "usage: %s <n>\n", argv[0]);
+        fprintf (stderr, "where <n> is the length of hash table.\n");
+        return -1;
+    }
+
+    int nProbe;
+    double average;
     int nEntries = 0;
     int probeSum = 0;
     bool found;
-    HashTable ht = HashTable();
+    HashTable ht = HashTable(N);
 
     random_device rd;
     mt19937 generator(rd());
@@ -29,12 +42,12 @@ int main(int argc, char* argv[]){
 
     for (int i = 0; i < 10000; i++){
         int randomNum = distribution(generator);
-        found = ht.find(randomNum,*nProbe);
-        probeSum += *(nProbe);
+        found = ht.find(randomNum, nProbe);
+        probeSum += nProbe;
     }
 
-    average = probeSum/10000;
-    printf("50%% full: %d\n", average);
+    average = (double)  probeSum/ (double) 10000;
+    printf("50%% full: %.4f\n", average);
 
     while (true){
         
@@ -48,15 +61,14 @@ int main(int argc, char* argv[]){
 
     for (int i = 0; i < 10000; i++){
         int randomNum = distribution(generator);
-        found = ht.find(randomNum,*nProbe);
-        probeSum += *(nProbe);
+        found = ht.find(randomNum, nProbe);
+        probeSum += nProbe;
     }
 
-    average = probeSum/20000;
-    printf("90%% full: %d\n", average);
+    average = (double) probeSum/ (double) (10000*2);
+    printf("90%% full: %.4f\n", average);
 
     ht.delete_table();
-    delete nProbe;
 
     return 0;
 }

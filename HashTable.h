@@ -1,10 +1,12 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
+#define phi 0.6180339887
+
 class HashTable
 {
 public:
-  HashTable();
+  HashTable(int);
   /* implement copy constructor, assignment, destructor if needed */
 
   int insert(int value);

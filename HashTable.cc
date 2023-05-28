@@ -1,8 +1,9 @@
 #include "HashTable.h"
+#include <math.h>
 
-HashTable::HashTable(){
+HashTable::HashTable(int N){
     load = 0;
-    nSlot = 65536;
+    nSlot = N;
     nElem = 0;
 
     table = new int[nSlot];
@@ -25,6 +26,7 @@ int HashTable::insert(int value){
             newIndex = (hashIndex + probe) % nSlot;
         } else {
             table[newIndex] = value;
+            nElem++;
             load = (double) nElem / (double) nSlot;
             found = true;
         }
@@ -48,15 +50,14 @@ bool HashTable::find(int value, int &nProbes){
         if (table[newIndex] == value){
             found = true;
             break;
-        } 
+        } else if (table[newIndex] == -1){
+            found = false;
+            break;
+        }
         probe++;
         newIndex = (hashIndex + probe) % nSlot;
+        
     }
-
-    if (!found){
-        probe = -1;
-    }
-
     nProbes = probe;
 
     return found;
@@ -64,4 +65,7 @@ bool HashTable::find(int value, int &nProbes){
 
 void HashTable::delete_table(){
     delete [] table;
+    load = 0;
+    nSlot = 0;
+    nElem = 0;
 }

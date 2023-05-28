@@ -1,16 +1,29 @@
 #include "HashTable.h"
 #include <iostream>
 #include <random>
+#include <cstdlib>
+#include <cassert>
 
 using namespace std;
 
 int main(int argc, char* argv[]){
     
+    int N = -1;
+
+    if (argc == 2) {
+        N = atoi (argv[1]);
+        assert(N > 0);
+    } else {
+        fprintf (stderr, "usage: %s <n>\n", argv[0]);
+        fprintf (stderr, "where <n> is the length of hash table.\n");
+        return -1;
+    }
+
     int nProbe;
-    int average;
+    double average;
     int nEntries = 0;
     int probeSum = 0;
-    HashTable ht = HashTable();
+    HashTable ht = HashTable(N);
 
     random_device rd;
     mt19937 generator(rd());
@@ -27,15 +40,14 @@ int main(int argc, char* argv[]){
         }
 
         if (ht.load_factor() == 0.5){
-            average = probeSum / nEntries;
-            printf("50%% full: %d\n", average);
+            average = (double) probeSum / (double) nEntries;
+            printf("50%% full: %.4f\n", average);
         }
         else if (ht.load_factor() == 0.9){
-            average = probeSum / nEntries;
-            printf("90%% full: %d\n", average);
+            average = (double) probeSum / (double) nEntries;
+            printf("90%% full: %.4f\n", average);
             break;
         }
-
     }
     ht.delete_table();
 
